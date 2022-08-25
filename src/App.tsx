@@ -2,23 +2,53 @@ import React from "react";
 import "./app.css";
 import { Fretboard } from "./components/fretboard/Fretboard";
 import { fretboardArray } from "./constants";
+import { midiHandler } from "./Midi";
 
-class App extends React.Component {
+interface IAppState {
+  selectedFret: undefined | [number, number];
+}
+class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
   protected endingFretRef = React.createRef<HTMLInputElement>();
+  protected midiHandler = midiHandler;
 
-  protected handleStartGame = ():void => this.doHandleStartGame();
+  state: IAppState = {
+    selectedFret: undefined,
+  };
+
+  protected handleStartGame = (): void => this.doHandleStartGame();
   protected doHandleStartGame(): void {
     const startingFret = this.startingFretRef.current?.value;
     const endingFret = this.endingFretRef.current?.value;
     if (startingFret !== undefined && endingFret !== undefined) {
-      const [randomFret, randomString] = this.pickRandomFret(
+      const selectedFret = this.pickRandomFret(
         parseInt(startingFret),
         parseInt(endingFret),
         fretboardArray.length
       );
-      console.log(randomFret, randomString);
+      console.log(selectedFret);
+      this.setState({ selectedFret });
     }
+  }
+
+  componentDidMount(): void {
+    this.midiHandler.initialize()?.then(() => {
+      console.log("ready");
+      this.midiHandler.onNotePressedEmitter.on(
+        "notepressed",
+        (note: string) => {
+          if (this.state.selectedFret) {
+            const [fret, string] = this.state.selectedFret;
+            const highlightedNote = fretboardArray[string][fret];
+            console.log("converted note", note);
+            if (note === highlightedNote) {
+              this.handleStartGame();
+            }
+          }
+          console.log("APP GOT", note);
+        }
+      );
+    });
   }
 
   protected pickRandomFret(
@@ -28,7 +58,7 @@ class App extends React.Component {
   ): [number, number] {
     const fretRange = endingFret - startingFret;
     const randomFret = startingFret + Math.round(Math.random() * fretRange);
-    const randomString = Math.ceil(Math.random() * numStrings);
+    const randomString = Math.floor(Math.random() * numStrings);
     return [randomFret, randomString];
   }
 
@@ -36,7 +66,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="fretboard-container">
-          <Fretboard markers={[3, 5, 7, 9, 12]} fretboard={fretboardArray} />
+          <Fretboard
+            selectedFret={this.state.selectedFret}
+            markers={[3, 5, 7, 9, 12]}
+            fretboard={fretboardArray}
+          />
         </div>
         <div className="controls-container">
           <div>
