@@ -33,14 +33,10 @@ class MidiHandler {
     if (WebMidi.inputs.length === 1) {
       this.onInputSelect(WebMidi.inputs[0].name);
     }
-    WebMidi.inputs.forEach((input) => console.log(input.name));
-    const myInput = WebMidi.getInputByName("Nord Stage 3 MIDI Output");
-    console.log(myInput);
   }
 
   protected onInputSelect(inputName: string): void {
     const selectedInput = WebMidi.getInputByName(inputName);
-    console.log('selected this input', inputName);
     selectedInput.addListener("noteon", (e) => {
       this.fireNoteOn(e.note.identifier);
     });

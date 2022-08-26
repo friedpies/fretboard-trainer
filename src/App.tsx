@@ -31,7 +31,6 @@ class App extends React.Component<{}, IAppState> {
         parseInt(endingFret),
         fretboardArray.length
       );
-      console.log(selectedFret);
       this.setState({ selectedFret });
     }
   }
@@ -61,7 +60,6 @@ class App extends React.Component<{}, IAppState> {
     });
     this.midiHandler.onInputsReceived.on('inputs-received', (inputs: Input[]) => {
       this.setState({inputs});
-      console.log('new inputs', inputs);
     })
   }
 
@@ -78,7 +76,6 @@ class App extends React.Component<{}, IAppState> {
 
   protected handleMidiInputChanged = (e: React.ChangeEvent<HTMLSelectElement>): void => this.doHandleMidiInputChanged(e);
   protected doHandleMidiInputChanged(e: React.ChangeEvent<HTMLSelectElement>): void {
-      console.log('change event', e);
   }
 
   render() {
