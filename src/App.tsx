@@ -59,9 +59,12 @@ class App extends React.Component<{}, IAppState> {
       playedNotes.delete(note);
       this.setState({ playedNotes });
     });
-    this.midiHandler.onInputsReceived.on('inputs-received', (inputs: Input[]) => {
-      this.setState({inputs});
-    })
+    this.midiHandler.onInputsReceived.on(
+      "inputs-received",
+      (inputs: Input[]) => {
+        this.setState({ inputs });
+      }
+    );
   }
 
   protected pickRandomFret(
@@ -75,8 +78,12 @@ class App extends React.Component<{}, IAppState> {
     return [randomFret, randomString];
   }
 
-  protected handleMidiInputChanged = (e: React.MouseEvent<HTMLButtonElement>): void => this.doHandleMidiInputChanged(e);
-  protected doHandleMidiInputChanged(e: React.MouseEvent<HTMLButtonElement>): void {
+  protected handleMidiInputChanged = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): void => this.doHandleMidiInputChanged(e);
+  protected doHandleMidiInputChanged(
+    e: React.MouseEvent<HTMLButtonElement>
+  ): void {
     const selectedInputName = this.midiInputRef.current?.value;
     if (selectedInputName) {
       this.midiHandler.onInputSelect(selectedInputName);
@@ -95,7 +102,7 @@ class App extends React.Component<{}, IAppState> {
           />
         </div>
         <div className="controls-container">
-          <div>
+          <div className="game-controls">
             <div>
               <label htmlFor="starting-fret">Starting Fret</label>
               <input
@@ -115,17 +122,17 @@ class App extends React.Component<{}, IAppState> {
               />
             </div>
             <button onClick={this.generateNewFret}>Start</button>
-            <div>
-              <label htmlFor="inputs">Available MIDI Inputs</label>
-              <select
-                id="inputs"
-                ref={this.midiInputRef}
-              >{this.state.inputs.map(input => (
+          </div>
+          <div className="midi-controls">
+            <label htmlFor="inputs">Available MIDI Inputs</label>
+            <select id="inputs" ref={this.midiInputRef}>
+              {this.state.inputs.map((input) => (
                 <option key={input.name}>{input.name}</option>
               ))}
-              </select>
-              <button onClick={this.handleMidiInputChanged}>Select MIDI Input</button>
-            </div>
+            </select>
+            <button onClick={this.handleMidiInputChanged}>
+              Select MIDI Input
+            </button>
           </div>
         </div>
       </div>
