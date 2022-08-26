@@ -2,6 +2,7 @@ import React from "react";
 import { Input } from "webmidi";
 import "./app.css";
 import { Fretboard } from "./components/fretboard/Fretboard";
+import { Piano } from "./components/piano/Piano";
 import { fretboardArray } from "./constants";
 import { midiHandler } from "./Midi";
 
@@ -100,6 +101,9 @@ class App extends React.Component<{}, IAppState> {
             fretboard={fretboardArray}
             playedNotes={this.state.playedNotes}
           />
+        </div>
+        <div className="piano-container">
+          <Piano />
         </div>
         <div className="controls-container">
           <div className="game-controls">

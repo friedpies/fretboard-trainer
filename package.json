@@ -11,6 +11,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "html-piano": "^1.1.2",
     "midi-message-parser": "^2.0.1",
     "picnic": "^7.1.0",
     "react": "^18.2.0",
