@@ -13,6 +13,7 @@ interface IAppState {
 class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
   protected endingFretRef = React.createRef<HTMLInputElement>();
+  protected midiInputRef = React.createRef<HTMLSelectElement>();
   protected midiHandler = midiHandler;
 
   state: IAppState = {
@@ -74,8 +75,12 @@ class App extends React.Component<{}, IAppState> {
     return [randomFret, randomString];
   }
 
-  protected handleMidiInputChanged = (e: React.ChangeEvent<HTMLSelectElement>): void => this.doHandleMidiInputChanged(e);
-  protected doHandleMidiInputChanged(e: React.ChangeEvent<HTMLSelectElement>): void {
+  protected handleMidiInputChanged = (e: React.MouseEvent<HTMLButtonElement>): void => this.doHandleMidiInputChanged(e);
+  protected doHandleMidiInputChanged(e: React.MouseEvent<HTMLButtonElement>): void {
+    const selectedInputName = this.midiInputRef.current?.value;
+    if (selectedInputName) {
+      this.midiHandler.onInputSelect(selectedInputName);
+    }
   }
 
   render() {
@@ -114,11 +119,12 @@ class App extends React.Component<{}, IAppState> {
               <label htmlFor="inputs">Available MIDI Inputs</label>
               <select
                 id="inputs"
-                onChange={this.handleMidiInputChanged}
+                ref={this.midiInputRef}
               >{this.state.inputs.map(input => (
                 <option key={input.name}>{input.name}</option>
               ))}
               </select>
+              <button onClick={this.handleMidiInputChanged}>Select MIDI Input</button>
             </div>
           </div>
         </div>

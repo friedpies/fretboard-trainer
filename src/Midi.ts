@@ -1,5 +1,6 @@
 import EventEmitter from "events";
-import { Input, WebMidi } from "webmidi";
+// @ts-ignore-next-line
+import { Input, WebMidi, Listener } from "webmidi";
 
 class MidiHandler {
   protected midiAccess: MIDIAccess | undefined;
@@ -7,6 +8,8 @@ class MidiHandler {
   readonly onNoteOffEmitter = new EventEmitter();
   readonly onInputsReceived = new EventEmitter();
   protected previouslySelectedInput: Input | undefined = undefined;
+  protected noteOnListener: Listener | undefined;
+  protected noteOffListener: Listener | undefined;
 
   initialize(): Promise<void> {
     if (!this.midiAccess) {
@@ -35,14 +38,19 @@ class MidiHandler {
     }
   }
 
-  protected onInputSelect(inputName: string): void {
+  onInputSelect(inputName: string): void {
+    this.previouslySelectedInput?.removeListener(this.noteOffListener);
+    this.previouslySelectedInput?.removeListener(this.noteOnListener);
     const selectedInput = WebMidi.getInputByName(inputName);
-    selectedInput.addListener("noteon", (e) => {
-      this.fireNoteOn(e.note.identifier);
-    });
-    selectedInput.addListener("noteoff", (e) => {
-      this.fireNoteOff(e.note.identifier);
-    });
+    if (selectedInput) {
+      this.noteOnListener = selectedInput.addListener("noteon", (e) => {
+        this.fireNoteOn(e.note.identifier);
+      });
+      this.noteOffListener = selectedInput.addListener("noteoff", (e) => {
+        this.fireNoteOff(e.note.identifier);
+      });
+      this.previouslySelectedInput = selectedInput;
+    }
   }
 
   protected onEnabled(): void {
