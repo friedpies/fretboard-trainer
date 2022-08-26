@@ -1,12 +1,12 @@
 import EventEmitter from "events";
 // @ts-ignore-next-line
 import { Input, WebMidi, Listener } from "webmidi";
+import { IController } from "./constants";
 
-class MidiHandler {
+class MidiHandler implements IController {
   protected midiAccess: MIDIAccess | undefined;
-  readonly onNoteOnEmitter = new EventEmitter();
-  readonly onNoteOffEmitter = new EventEmitter();
-  readonly onInputsReceived = new EventEmitter();
+  readonly onKeyEmitter = new EventEmitter();
+  readonly onMidiEventEmitter = new EventEmitter();
   protected previouslySelectedInput: Input | undefined = undefined;
   protected noteOnListener: Listener | undefined;
   protected noteOffListener: Listener | undefined;
@@ -21,14 +21,14 @@ class MidiHandler {
   }
 
   protected fireNoteOn = (note: string): void => {
-    this.onNoteOnEmitter.emit("noteon", note);
+    this.onKeyEmitter.emit("noteon", note);
   };
   protected fireNoteOff = (note: string): void => {
-    this.onNoteOffEmitter.emit("noteoff", note);
+    this.onKeyEmitter.emit("noteoff", note);
   };
 
   protected fireInputsReceived = (inputs: Input[]) => {
-    this.onInputsReceived.emit("inputs-received", inputs);
+    this.onMidiEventEmitter.emit("inputs-received", inputs);
   };
 
   protected refreshInputs(): void {

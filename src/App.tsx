@@ -44,7 +44,7 @@ class App extends React.Component<{}, IAppState> {
   }
 
   protected registerListeners(): void {
-    this.midiHandler.onNoteOnEmitter.on("noteon", (note: string) => {
+    this.midiHandler.onKeyEmitter.on("noteon", (note: string) => {
       const playedNotes = new Set([...this.state.playedNotes, note]);
       this.setState({ playedNotes });
       if (this.state.selectedFret) {
@@ -55,12 +55,12 @@ class App extends React.Component<{}, IAppState> {
         }
       }
     });
-    this.midiHandler.onNoteOffEmitter.on("noteoff", (note: string) => {
+    this.midiHandler.onKeyEmitter.on("noteoff", (note: string) => {
       const playedNotes = this.state.playedNotes;
       playedNotes.delete(note);
       this.setState({ playedNotes: new Set([...playedNotes]) });
     });
-    this.midiHandler.onInputsReceived.on(
+    this.midiHandler.onMidiEventEmitter.on(
       "inputs-received",
       (inputs: Input[]) => {
         this.setState({ inputs });

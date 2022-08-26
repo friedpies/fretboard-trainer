@@ -1,3 +1,5 @@
+import EventEmitter from "events";
+
 export const fretboardArray = [
   [
     "E4",
@@ -106,6 +108,11 @@ const generateLookupTable = (
 
 export interface InstrumentDisplay {
   playedNotes: Set<string>;
+}
+
+export interface IController {
+  readonly onKeyEmitter: EventEmitter;
+
 }
 
 export const lookupTable = generateLookupTable(fretboardArray);
