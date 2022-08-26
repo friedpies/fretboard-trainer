@@ -1,12 +1,11 @@
 import { ReactNode } from "react";
-import { isPlayed } from "../../constants";
+import { InstrumentDisplay, isPlayed } from "../../constants";
 import "./fretboard.css";
 
-export interface IFretboardProps {
+export interface IFretboardProps extends InstrumentDisplay {
   fretboard: string[][];
   markers: number[];
   selectedFret: [number, number] | undefined;
-  playedNotes: Set<string>;
 }
 export const Fretboard: React.FC<IFretboardProps> = ({
   fretboard,

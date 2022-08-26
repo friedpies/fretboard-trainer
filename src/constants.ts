@@ -104,6 +104,10 @@ const generateLookupTable = (
   return lookupTable;
 };
 
+export interface InstrumentDisplay {
+  playedNotes: Set<string>;
+}
+
 export const lookupTable = generateLookupTable(fretboardArray);
 
 export const isPlayed = (

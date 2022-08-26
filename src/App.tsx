@@ -58,7 +58,7 @@ class App extends React.Component<{}, IAppState> {
     this.midiHandler.onNoteOffEmitter.on("noteoff", (note: string) => {
       const playedNotes = this.state.playedNotes;
       playedNotes.delete(note);
-      this.setState({ playedNotes });
+      this.setState({ playedNotes: new Set([...playedNotes]) });
     });
     this.midiHandler.onInputsReceived.on(
       "inputs-received",
@@ -94,7 +94,7 @@ class App extends React.Component<{}, IAppState> {
   render() {
     return (
       <div className="App">
-        <div className="fretboard-container">
+        <div className="instrument-container">
           <Fretboard
             selectedFret={this.state.selectedFret}
             markers={[3, 5, 7, 9, 12]}
@@ -103,7 +103,7 @@ class App extends React.Component<{}, IAppState> {
           />
         </div>
         <div className="piano-container">
-          <Piano />
+          <Piano playedNotes={this.state.playedNotes} />
         </div>
         <div className="controls-container">
           <div className="game-controls">

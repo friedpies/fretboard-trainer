@@ -1,0 +1,11 @@
+.piano-container {
+    display: flex;
+    justify-content: center;
+}
+
+.piano-container .piano {
+    height: 120px;
+    width: 100%;
+    min-width: 800px;
+    max-width: 1000px;
+}
