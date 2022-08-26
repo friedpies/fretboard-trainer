@@ -1,15 +1,18 @@
 import { ReactNode } from "react";
+import { isPlayed } from "../../constants";
 import "./fretboard.css";
 
 export interface IFretboardProps {
   fretboard: string[][];
   markers: number[];
   selectedFret: [number, number] | undefined;
+  playedNotes: Set<string>;
 }
 export const Fretboard: React.FC<IFretboardProps> = ({
   fretboard,
   markers,
   selectedFret,
+  playedNotes,
 }) => {
   const generateRows = (): ReactNode => {
     const stringArray: ReactNode[] = [];
@@ -18,22 +21,26 @@ export const Fretboard: React.FC<IFretboardProps> = ({
       const string = fretboard[stringIndex];
       for (let fretIndex = 0; fretIndex < string.length; fretIndex++) {
         const fret = string[fretIndex];
-        const isSelected = fretIndex === selectedFret?.[0] && stringIndex === selectedFret[1];
+        const isSelected =
+          fretIndex === selectedFret?.[0] && stringIndex === selectedFret[1];
         fretArray.push(
-          <span
+          <div
             className={`fret ${fretIndex === 0 ? "open-string" : ""}${
               isSelected ? " selected" : ""
-            }`}
+            }${isPlayed(stringIndex, fretIndex, playedNotes) ? " played" : ""}`}
             key={`${stringIndex}::${fret}`}
             data-string={string}
             data-fret={fret}
           >
-            {fret}
-            {stringIndex === fretboard.length - 1 &&
-              markers.includes(fretIndex) && (
-                <div className="marker">{fretIndex === 12 ? "o o" : "o"}</div>
-              )}
-          </span>
+            <div className="string-line" />
+            <span>
+              {fret}
+              {stringIndex === fretboard.length - 1 &&
+                markers.includes(fretIndex) && (
+                  <div className="marker">{fretIndex === 12 ? "o o" : "o"}</div>
+                )}
+            </span>
+          </div>
         );
       }
       stringArray.push(

@@ -6,6 +6,7 @@ import { midiHandler } from "./Midi";
 
 interface IAppState {
   selectedFret: undefined | [number, number];
+  playedNotes: Set<string>;
 }
 class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
@@ -14,9 +15,10 @@ class App extends React.Component<{}, IAppState> {
 
   state: IAppState = {
     selectedFret: undefined,
+    playedNotes: new Set(),
   };
 
-  protected handleStartGame = (): void => this.doHandleStartGame();
+  protected generateNewFret = (): void => this.doHandleStartGame();
   protected doHandleStartGame(): void {
     const startingFret = this.startingFretRef.current?.value;
     const endingFret = this.endingFretRef.current?.value;
@@ -33,21 +35,26 @@ class App extends React.Component<{}, IAppState> {
 
   componentDidMount(): void {
     this.midiHandler.initialize()?.then(() => {
-      console.log("ready");
-      this.midiHandler.onNotePressedEmitter.on(
-        "notepressed",
-        (note: string) => {
-          if (this.state.selectedFret) {
-            const [fret, string] = this.state.selectedFret;
-            const highlightedNote = fretboardArray[string][fret];
-            console.log("converted note", note);
-            if (note === highlightedNote) {
-              this.handleStartGame();
-            }
-          }
-          console.log("APP GOT", note);
+      this.registerListeners();
+    });
+  }
+
+  protected registerListeners(): void {
+    this.midiHandler.onNoteOnEmitter.on("noteon", (note: string) => {
+      const playedNotes = new Set([...this.state.playedNotes, note]);
+      this.setState({ playedNotes });
+      if (this.state.selectedFret) {
+        const [fret, string] = this.state.selectedFret;
+        const highlightedNote = fretboardArray[string][fret];
+        if (note === highlightedNote) {
+          this.generateNewFret();
         }
-      );
+      }
+    });
+    this.midiHandler.onNoteOffEmitter.on("noteoff", (note: string) => {
+      const playedNotes = this.state.playedNotes;
+      playedNotes.delete(note);
+      this.setState({ playedNotes });
     });
   }
 
@@ -70,6 +77,7 @@ class App extends React.Component<{}, IAppState> {
             selectedFret={this.state.selectedFret}
             markers={[3, 5, 7, 9, 12]}
             fretboard={fretboardArray}
+            playedNotes={this.state.playedNotes}
           />
         </div>
         <div className="controls-container">
@@ -90,7 +98,7 @@ class App extends React.Component<{}, IAppState> {
                 type="number"
               />
             </div>
-            <button onClick={this.handleStartGame}>Start</button>
+            <button onClick={this.generateNewFret}>Start</button>
           </div>
         </div>
       </div>

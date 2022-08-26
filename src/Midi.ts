@@ -3,7 +3,8 @@ import { WebMidi } from "webmidi";
 
 class MidiHandler {
   protected midiAccess: MIDIAccess | undefined;
-  readonly onNotePressedEmitter = new EventEmitter();
+  readonly onNoteOnEmitter = new EventEmitter();
+  readonly onNoteOffEmitter = new EventEmitter();
 
   initialize(): Promise<void> {
     if (!this.midiAccess) {
@@ -14,9 +15,11 @@ class MidiHandler {
     return Promise.resolve(undefined);
   }
 
-  protected fireEvent = (note: string): void => {
-    console.log("firing event");
-    this.onNotePressedEmitter.emit("notepressed", note);
+  protected fireNoteOn = (note: string): void => {
+    this.onNoteOnEmitter.emit("noteon", note);
+  };
+  protected fireNoteOff = (note: string): void => {
+    this.onNoteOffEmitter.emit("noteoff", note);
   };
 
   protected onEnabled(): void {
@@ -24,7 +27,10 @@ class MidiHandler {
     const myInput = WebMidi.getInputByName("Nord Stage 3 MIDI Output");
     console.log(myInput);
     myInput.addListener("noteon", (e) => {
-      this.fireEvent(e.note.identifier);
+      this.fireNoteOn(e.note.identifier);
+    });
+    myInput.addListener("noteoff", (e) => {
+      this.fireNoteOff(e.note.identifier);
     });
   }
 }

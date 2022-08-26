@@ -4,31 +4,43 @@
 }
 
 .fretboard-grid .string {
-  border: solid 1px black;
   display: flex;
   justify-content: space-between;
 }
 
 .fretboard-grid .string .fret {
-  border: solid 1px black;
+  border-right: solid 3px silver;
   width: 100%;
   position: relative;
-  color: yellowgreen;
+  background-color: brown;
+  color: brown;
+}
+
+.fretboard-grid .string-line {
+  position: absolute;
+  width: 105%;
+  top: calc(50% - 3px);
+  height: 3px;
+  background-color: grey;
 }
 
 .fretboard-grid .string .fret.selected {
   background-color: yellowgreen;
+  color: yellowgreen;
+}
+
+.fretboard-grid .string .fret.played {
+  background-color: blue;
 }
 
 .fretboard-grid .string .fret.open-string {
-  background-color: red;
-  border-right: solid 3px silver;
+  border-right: solid 10px lavenderblush;
 }
 
 .fretboard-grid .string .marker {
   width: 20px;
   position: absolute;
-  top: 100%;
+  top: -48px;
   left: calc(50% - 10px);
-  color: black;
+  color: white;
 }
