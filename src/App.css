@@ -43,5 +43,7 @@
 .fretboard-container {
   margin-top: 40px;
   margin-bottom: 40px;
-  width: 80%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

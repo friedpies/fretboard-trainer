@@ -1,4 +1,5 @@
 import React from "react";
+import { Input } from "webmidi";
 import "./app.css";
 import { Fretboard } from "./components/fretboard/Fretboard";
 import { fretboardArray } from "./constants";
@@ -7,6 +8,7 @@ import { midiHandler } from "./Midi";
 interface IAppState {
   selectedFret: undefined | [number, number];
   playedNotes: Set<string>;
+  inputs: Input[];
 }
 class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
@@ -16,6 +18,7 @@ class App extends React.Component<{}, IAppState> {
   state: IAppState = {
     selectedFret: undefined,
     playedNotes: new Set(),
+    inputs: [],
   };
 
   protected generateNewFret = (): void => this.doHandleStartGame();
@@ -56,6 +59,10 @@ class App extends React.Component<{}, IAppState> {
       playedNotes.delete(note);
       this.setState({ playedNotes });
     });
+    this.midiHandler.onInputsReceived.on('inputs-received', (inputs: Input[]) => {
+      this.setState({inputs});
+      console.log('new inputs', inputs);
+    })
   }
 
   protected pickRandomFret(
@@ -67,6 +74,11 @@ class App extends React.Component<{}, IAppState> {
     const randomFret = startingFret + Math.round(Math.random() * fretRange);
     const randomString = Math.floor(Math.random() * numStrings);
     return [randomFret, randomString];
+  }
+
+  protected handleMidiInputChanged = (e: React.ChangeEvent<HTMLSelectElement>): void => this.doHandleMidiInputChanged(e);
+  protected doHandleMidiInputChanged(e: React.ChangeEvent<HTMLSelectElement>): void {
+      console.log('change event', e);
   }
 
   render() {
@@ -88,6 +100,7 @@ class App extends React.Component<{}, IAppState> {
                 ref={this.startingFretRef}
                 id="starting-fret"
                 type="number"
+                defaultValue={0}
               />
             </div>
             <div>
@@ -96,9 +109,20 @@ class App extends React.Component<{}, IAppState> {
                 ref={this.endingFretRef}
                 id="starting-fret"
                 type="number"
+                defaultValue={12}
               />
             </div>
             <button onClick={this.generateNewFret}>Start</button>
+            <div>
+              <label htmlFor="inputs">Available MIDI Inputs</label>
+              <select
+                id="inputs"
+                onChange={this.handleMidiInputChanged}
+              >{this.state.inputs.map(input => (
+                <option key={input.name}>{input.name}</option>
+              ))}
+              </select>
+            </div>
           </div>
         </div>
       </div>

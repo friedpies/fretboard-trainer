@@ -1,6 +1,8 @@
 .fretboard-grid {
   width: 100%;
   display: grid;
+  min-width: 800px;
+  max-width: 1000px;
 }
 
 .fretboard-grid .string {
