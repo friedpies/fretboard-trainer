@@ -2,6 +2,7 @@
   text-align: center;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 
@@ -14,9 +15,12 @@
 }
 
 .controls-container {
+  display: flex;
+  justify-content: center;
   margin: 20px;
   display: grid;
   grid-template-columns: 1fr 2fr;
+  width: 600px;
 }
 
 .midi-controls,

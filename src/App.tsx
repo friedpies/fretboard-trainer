@@ -3,6 +3,7 @@ import { Input } from "webmidi";
 import "./app.css";
 import { Fretboard } from "./components/fretboard/Fretboard";
 import { Piano } from "./components/piano/Piano";
+import { PianoModel } from "./components/piano/PianoModel";
 import { fretboardArray } from "./constants";
 import { midiHandler } from "./Midi";
 
@@ -16,6 +17,7 @@ class App extends React.Component<{}, IAppState> {
   protected endingFretRef = React.createRef<HTMLInputElement>();
   protected midiInputRef = React.createRef<HTMLSelectElement>();
   protected midiHandler = midiHandler;
+  protected pianoModel = new PianoModel();
 
   state: IAppState = {
     selectedFret: undefined,
@@ -44,7 +46,7 @@ class App extends React.Component<{}, IAppState> {
   }
 
   protected registerListeners(): void {
-    this.midiHandler.onKeyEmitter.on("noteon", (note: string) => {
+    const onNoteOn = (note: string) => {
       const playedNotes = new Set([...this.state.playedNotes, note]);
       this.setState({ playedNotes });
       if (this.state.selectedFret) {
@@ -54,18 +56,24 @@ class App extends React.Component<{}, IAppState> {
           this.generateNewFret();
         }
       }
-    });
-    this.midiHandler.onKeyEmitter.on("noteoff", (note: string) => {
+    };
+    const onNoteOff = (note: string) => {
       const playedNotes = this.state.playedNotes;
       playedNotes.delete(note);
       this.setState({ playedNotes: new Set([...playedNotes]) });
-    });
+    };
+
+    this.midiHandler.onKeyEmitter.on("noteon", onNoteOn);
+    this.midiHandler.onKeyEmitter.on("noteoff", onNoteOff);
     this.midiHandler.onMidiEventEmitter.on(
       "inputs-received",
       (inputs: Input[]) => {
         this.setState({ inputs });
       }
     );
+
+    this.pianoModel.onKeyEmitter.on('noteon', onNoteOn);
+    this.pianoModel.onKeyEmitter.on('noteoff', onNoteOff);
   }
 
   protected pickRandomFret(
@@ -103,7 +111,10 @@ class App extends React.Component<{}, IAppState> {
           />
         </div>
         <div className="piano-container">
-          <Piano playedNotes={this.state.playedNotes} />
+          <Piano
+            playedNotes={this.state.playedNotes}
+            pianoModel={this.pianoModel}
+          />
         </div>
         <div className="controls-container">
           <div className="game-controls">
