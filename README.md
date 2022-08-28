@@ -1,10 +1,12 @@
 # Fretboard Trainer
 
-The purpose of this app is to close the gap between your mental model of a piano keyboard and a guitar fretboard. The app will randomly select a guitar note and the aim is to play the note back on the keyboard (in the correct octave). When the right note is played, another random fret will be generated.
+The purpose of this web app is to attempt to close the metnal gap between a piano keyboard and a guitar fretboard. This app will randomly select a guitar note and the goal is to play the note back on the keyboard (in the correct octave). When the right note is played, another random fret will be generated.
 
-![image](https://user-images.githubusercontent.com/9576306/186804419-3911d70f-f901-4cfc-ae76-52eb6ae67788.png)
+<img width="875" alt="Screen Shot 2022-08-28 at 1 00 22 AM" src="https://user-images.githubusercontent.com/9576306/187060042-d995e859-5ed6-444b-b057-b6d98746ea9b.png">
 
-As both a piano and guitar player, I've come to realize I have completely different mental models of the two instruments. A piano keyboard is laid out linearly and there is a direct mapping of a single note to a single key. However on the guitar, a single note may exist in several locations on the fretboard. This can make it pretty difficult to master the fretboard and transition between different positions on the guitar while mentally keeping track of what notes you're playing. Many guitar players rely on "shapes" (e.g. the CAGED system) to get by and tend not to think about **note names** directly, but rather **functional harmony (scale degrees, etc.)**.
+# Why I made this
+
+As both a piano and guitar player, I've realized that I have completely different mental models of the two instruments. A piano keyboard is laid out linearly and there is a direct mapping of a single note to a single key. But on the guitar a single note may exist in several locations on the fretboard. This can make it pretty difficult to master the fretboard and transition between different positions on the guitar while mentally keeping track of what notes you're playing. Many guitar players rely on "shapes" (e.g. the CAGED system) to get by and tend not to think about **note names** directly, but rather **functional harmony (scale degrees, etc.)**.
 
 There are several fretboard training tools on the web, but none that I've found that map the fretboard to the *piano keyboard*. Instead many require you to select the note names from a list/grid via a mouse click. As a player of both instruments I hope that this app will start to merge two mental models of the instruments, eventually removing the need for an intermediate **note translation** and moving more to a direct visual mapping.
 
