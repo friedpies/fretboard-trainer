@@ -17,6 +17,7 @@ class MidiHandler implements IController {
         .then(() => this.onEnabled())
         .catch((err) => alert(err));
     }
+
     return Promise.resolve(undefined);
   }
 
@@ -54,6 +55,9 @@ class MidiHandler implements IController {
   }
 
   protected onEnabled(): void {
+    WebMidi.addListener('portschanged', () => {
+      this.refreshInputs();
+    })
     this.refreshInputs();
   }
 }
