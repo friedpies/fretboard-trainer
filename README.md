@@ -6,12 +6,16 @@ The purpose of this web app is to attempt to close the metnal gap between a pian
 
 # Why I made this
 
-As both a piano and guitar player, I've realized that I have completely different mental models of the two instruments. A piano keyboard is laid out linearly and there is a direct mapping of a single note to a single key. But on the guitar a single note may exist in several locations on the fretboard. This can make it pretty difficult to master the fretboard and transition between different positions on the guitar while mentally keeping track of what notes you're playing. Many guitar players rely on "shapes" (e.g. the CAGED system) to get by and tend not to think about **note names** directly, but rather **functional harmony (scale degrees, etc.)**.
+As both a piano and guitar player, I've realized that I have completely different mental models of the two instruments. A piano keyboard is laid out linearly and there is a direct mapping of a single note to a single key. But on the guitar a single note may exist in several locations on the fretboard. This can make it pretty difficult to master the fretboard and transition between different positions on the guitar while mentally keeping track of what notes are being played. Many guitar players rely on shapes (e.g. the CAGED system) to navigate the fretboard and tend not to think about **note names** directly, but rather **functional harmony (scale degrees, etc.)**.
 
 There are several fretboard training tools on the web, but none that I've found that map the fretboard to the *piano keyboard*. Instead many require you to select the note names from a list/grid via a mouse click. As a player of both instruments I hope that this app will start to merge two mental models of the instruments, eventually removing the need for an intermediate **note translation** and moving more to a direct visual mapping.
 
 # How to Use
 
+Visit the deployed version [here](https://friedpies.github.io/fretboard-trainer/)
+
+If that doesn't work for some reason, built it yourself using the instructions below :)
+
 This app was built with Create React App and is pretty easy to get up and running. If you use `yarn`, then `yarn && yarn start` should be enough to get going. For npm, likely `npm install && npm start` should work (though I haven't tested).
 
-MIDI inputs will be listed in a select menu on start, changing the select value should reset the MIDI connection to your desired controller. Clicking "Start" will get you started! **this currently is not set up, but will be shortly**
+MIDI inputs will be listed in a select menu on start, changing the select value should reset the MIDI connection to your desired controller. Clicking "Start" will get you started!
