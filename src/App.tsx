@@ -72,8 +72,8 @@ class App extends React.Component<{}, IAppState> {
       }
     );
 
-    this.pianoModel.onKeyEmitter.on('noteon', onNoteOn);
-    this.pianoModel.onKeyEmitter.on('noteoff', onNoteOff);
+    this.pianoModel.onKeyEmitter.on("noteon", onNoteOn);
+    this.pianoModel.onKeyEmitter.on("noteoff", onNoteOff);
   }
 
   protected pickRandomFret(
@@ -101,56 +101,59 @@ class App extends React.Component<{}, IAppState> {
 
   render() {
     return (
-      <div className="App">
-        <div className="instrument-container">
-          <Fretboard
-            selectedFret={this.state.selectedFret}
-            markers={[3, 5, 7, 9, 12]}
-            fretboard={fretboardArray}
-            playedNotes={this.state.playedNotes}
-          />
-        </div>
-        <div className="piano-container">
-          <Piano
-            playedNotes={this.state.playedNotes}
-            pianoModel={this.pianoModel}
-          />
-        </div>
-        <div className="controls-container">
-          <div className="game-controls">
-            <div>
-              <label htmlFor="starting-fret">Starting Fret</label>
-              <input
-                ref={this.startingFretRef}
-                id="starting-fret"
-                type="number"
-                defaultValue={0}
-              />
-            </div>
-            <div>
-              <label htmlFor="ending-fret">Ending Fret</label>
-              <input
-                ref={this.endingFretRef}
-                id="starting-fret"
-                type="number"
-                defaultValue={12}
-              />
-            </div>
-            <button onClick={this.generateNewFret}>Start</button>
+        <div className="App">
+          <div className="instrument-container">
+            <Fretboard
+              selectedFret={this.state.selectedFret}
+              markers={[3, 5, 7, 9, 12]}
+              fretboard={fretboardArray}
+              playedNotes={this.state.playedNotes}
+            />
           </div>
-          <div className="midi-controls">
-            <label htmlFor="inputs">Available MIDI Inputs</label>
-            <select id="inputs" ref={this.midiInputRef}>
-              {this.state.inputs.map((input) => (
-                <option key={input.name}>{input.name}</option>
-              ))}
-            </select>
-            <button onClick={this.handleMidiInputChanged}>
-              Select MIDI Input
-            </button>
+          <div className="piano-container">
+            <Piano
+              playedNotes={this.state.playedNotes}
+              pianoModel={this.pianoModel}
+            />
           </div>
+          <div className="controls-container">
+            <div className="game-controls">
+              <div>
+                <label htmlFor="starting-fret">Starting Fret</label>
+                <input
+                  ref={this.startingFretRef}
+                  id="starting-fret"
+                  type="number"
+                  defaultValue={0}
+                />
+              </div>
+              <div>
+                <label htmlFor="ending-fret">Ending Fret</label>
+                <input
+                  ref={this.endingFretRef}
+                  id="starting-fret"
+                  type="number"
+                  defaultValue={12}
+                />
+              </div>
+              <button onClick={this.generateNewFret}>Start</button>
+            </div>
+            <div className="midi-controls">
+              <label htmlFor="inputs">Available MIDI Inputs</label>
+              <select id="inputs" ref={this.midiInputRef}>
+                {this.state.inputs.map((input) => (
+                  <option key={input.name}>{input.name}</option>
+                ))}
+              </select>
+              <button onClick={this.handleMidiInputChanged}>
+                Select MIDI Input
+              </button>
+            </div>
+          </div>
+        <footer>
+          <a href="https://github.com/friedpies/fretboard-trainer">repo</a>
+        </footer>
         </div>
-      </div>
     );
   }
 }
