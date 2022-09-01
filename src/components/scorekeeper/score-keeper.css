@@ -1,0 +1,15 @@
+
+
+.score-keeper-component .number-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.score-keeper-component .success {
+    color: green;
+}
+
+.score-keeper-component .fail {
+    color: orangered;
+}

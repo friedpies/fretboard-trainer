@@ -4,6 +4,7 @@ import "./app.css";
 import { Fretboard } from "./components/fretboard/Fretboard";
 import { Piano } from "./components/piano/Piano";
 import { PianoModel } from "./components/piano/PianoModel";
+import { ScoreKeeper } from "./components/scorekeeper/ScoreKeeper";
 import { fretboardArray } from "./constants";
 import { midiHandler } from "./Midi";
 
@@ -11,6 +12,8 @@ interface IAppState {
   selectedFret: undefined | [number, number];
   playedNotes: Set<string>;
   inputs: Input[];
+  numSuccess: number;
+  numFail: number
 }
 class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
@@ -23,10 +26,12 @@ class App extends React.Component<{}, IAppState> {
     selectedFret: undefined,
     playedNotes: new Set(),
     inputs: [],
+    numSuccess: 0,
+    numFail: 0,
   };
 
-  protected generateNewFret = (): void => this.doHandleStartGame();
-  protected doHandleStartGame(): void {
+  protected generateNewFret = (e?: React.MouseEvent<HTMLButtonElement>): void => this.doHandleStartGame(e);
+  protected doHandleStartGame(e?: React.MouseEvent<HTMLButtonElement>): void {
     const startingFret = this.startingFretRef.current?.value;
     const endingFret = this.endingFretRef.current?.value;
     if (startingFret !== undefined && endingFret !== undefined) {
@@ -35,7 +40,10 @@ class App extends React.Component<{}, IAppState> {
         parseInt(endingFret),
         fretboardArray.length
       );
-      this.setState({ selectedFret });
+      this.setState({ selectedFret});
+      if (e && e.currentTarget.getAttribute('data-id') === 'reset-button') {
+        this.setState({numFail: 0, numSuccess: 0 });
+      }
     }
   }
 
@@ -53,7 +61,10 @@ class App extends React.Component<{}, IAppState> {
         const [fret, string] = this.state.selectedFret;
         const highlightedNote = fretboardArray[string][fret];
         if (note === highlightedNote) {
+          this.setState({numSuccess: this.state.numSuccess + 1});
           this.generateNewFret();
+        } else {
+          this.setState({numFail: this.state.numFail + 1});
         }
       }
     };
@@ -101,59 +112,60 @@ class App extends React.Component<{}, IAppState> {
 
   render() {
     return (
-        <div className="App">
-          <div className="instrument-container">
-            <Fretboard
-              selectedFret={this.state.selectedFret}
-              markers={[3, 5, 7, 9, 12]}
-              fretboard={fretboardArray}
-              playedNotes={this.state.playedNotes}
-            />
-          </div>
-          <div className="piano-container">
-            <Piano
-              playedNotes={this.state.playedNotes}
-              pianoModel={this.pianoModel}
-            />
-          </div>
-          <div className="controls-container">
-            <div className="game-controls">
-              <div>
-                <label htmlFor="starting-fret">Starting Fret</label>
-                <input
-                  ref={this.startingFretRef}
-                  id="starting-fret"
-                  type="number"
-                  defaultValue={0}
-                />
-              </div>
-              <div>
-                <label htmlFor="ending-fret">Ending Fret</label>
-                <input
-                  ref={this.endingFretRef}
-                  id="starting-fret"
-                  type="number"
-                  defaultValue={12}
-                />
-              </div>
-              <button onClick={this.generateNewFret}>Start</button>
+      <div className="App">
+        <div className="instrument-container">
+          <Fretboard
+            selectedFret={this.state.selectedFret}
+            markers={[3, 5, 7, 9, 12]}
+            fretboard={fretboardArray}
+            playedNotes={this.state.playedNotes}
+          />
+        </div>
+        <div className="piano-container">
+          <Piano
+            playedNotes={this.state.playedNotes}
+            pianoModel={this.pianoModel}
+          />
+        </div>
+        <div className="controls-container">
+          <div className="game-controls card-wrapper">
+            <div>
+              <label htmlFor="starting-fret">Starting Fret</label>
+              <input
+                ref={this.startingFretRef}
+                id="starting-fret"
+                type="number"
+                defaultValue={0}
+              />
             </div>
-            <div className="midi-controls">
-              <label htmlFor="inputs">Available MIDI Inputs</label>
-              <select id="inputs" ref={this.midiInputRef}>
-                {this.state.inputs.map((input) => (
-                  <option key={input.name}>{input.name}</option>
-                ))}
-              </select>
-              <button onClick={this.handleMidiInputChanged}>
-                Select MIDI Input
-              </button>
+            <div>
+              <label htmlFor="ending-fret">Ending Fret</label>
+              <input
+                ref={this.endingFretRef}
+                id="starting-fret"
+                type="number"
+                defaultValue={12}
+              />
             </div>
+            <button data-id="reset-button" onClick={this.generateNewFret}>Start/Reset</button>
           </div>
+          <div className="midi-controls card-wrapper">
+            <label htmlFor="inputs">Available MIDI Inputs</label>
+            <select id="inputs" ref={this.midiInputRef}>
+              {this.state.inputs.map((input) => (
+                <option key={input.name}>{input.name}</option>
+              ))}
+            </select>
+            <button onClick={this.handleMidiInputChanged}>
+              Select MIDI Input
+            </button>
+          </div>
+          <ScoreKeeper numSuccess={this.state.numSuccess} numFail={this.state.numFail} />
+        </div>
         <footer>
           <a href="https://github.com/friedpies/fretboard-trainer">repo</a>
         </footer>
-        </div>
+      </div>
     );
   }
 }
