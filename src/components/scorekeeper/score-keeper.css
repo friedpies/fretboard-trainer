@@ -1,15 +1,42 @@
-
-
+.score-keeper-component h2 {
+    padding: 2px;
+}
 .score-keeper-component .number-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.score-keeper-component {
+  font-size: 20px;
 }
 
 .score-keeper-component .success {
-    color: green;
+  color: green;
+}
+
+.label-for-success {
+  color: green;
+}
+
+h2.score-title {
+  padding: 0 auto !important;
+}
+
+.label-for-fail {
+  color: orangered;
 }
 
 .score-keeper-component .fail {
-    color: orangered;
+  color: orangered;
+}
+
+.stat-container {
+  display: flex;
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px;
 }
