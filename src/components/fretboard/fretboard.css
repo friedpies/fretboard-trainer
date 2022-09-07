@@ -42,7 +42,7 @@
 .fretboard-grid .string .marker {
   width: 20px;
   position: absolute;
-  top: -48px;
+  top: -70px;
   left: calc(50% - 10px);
   color: white;
 }
