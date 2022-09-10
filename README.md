@@ -1,8 +1,8 @@
 # Fretboard Trainer
 
-The purpose of this web app is to attempt to close the metnal gap between a piano keyboard and a guitar fretboard. This app will randomly select a guitar note and the goal is to play the note back on the keyboard (in the correct octave). When the right note is played, another random fret will be generated.
+The purpose of this web app is to attempt to close the mental gap between a piano keyboard and a guitar fretboard. This app will randomly select a guitar note and the goal is to play the note back on the keyboard (in the correct octave). When the right note is played, another random fret will be generated.
 
-<img width="875" alt="Screen Shot 2022-08-28 at 1 00 22 AM" src="https://user-images.githubusercontent.com/9576306/187060042-d995e859-5ed6-444b-b057-b6d98746ea9b.png">
+![image](https://user-images.githubusercontent.com/9576306/189498876-25cfb55c-afc9-4c34-9989-f468194679a2.png)
 
 # Why I made this
 
@@ -13,6 +13,10 @@ There are several fretboard training tools on the web, but none that I've found 
 # How to Use
 
 Visit the deployed version [here](https://friedpies.github.io/fretboard-trainer/)
+
+- If you have a MIDI keyboard plugged in, select it from the dropdown (you can also use the keyboard display if you don't have a MIDI keyboard)
+- Set the fret range (defaults 0-12) and hit "start/reset"
+- A random fret note will be generated, try to match it on the keyboard
 
 If that doesn't work for some reason, built it yourself using the instructions below :)
 
