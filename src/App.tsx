@@ -128,6 +128,10 @@ class App extends React.Component<{}, IAppState> {
             pianoModel={this.pianoModel}
           />
         </div>
+        <ScoreKeeper
+          numSuccess={this.state.numSuccess}
+          numFail={this.state.numFail}
+        />
         <div className="controls-container">
           <div className="game-controls card-wrapper">
             <div>
@@ -164,10 +168,6 @@ class App extends React.Component<{}, IAppState> {
             </button>
           </div>
         </div>
-        <ScoreKeeper
-          numSuccess={this.state.numSuccess}
-          numFail={this.state.numFail}
-        />
         <footer>
           <a href="https://github.com/friedpies/fretboard-trainer">repo</a>
         </footer>
