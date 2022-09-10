@@ -13,7 +13,7 @@ interface IAppState {
   playedNotes: Set<string>;
   inputs: Input[];
   numSuccess: number;
-  numFail: number
+  numFail: number;
 }
 class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
@@ -30,7 +30,8 @@ class App extends React.Component<{}, IAppState> {
     numFail: 0,
   };
 
-  protected generateNewFret = (e?: React.MouseEvent<HTMLButtonElement>): void => this.doHandleStartGame(e);
+  protected generateNewFret = (e?: React.MouseEvent<HTMLButtonElement>): void =>
+    this.doHandleStartGame(e);
   protected doHandleStartGame(e?: React.MouseEvent<HTMLButtonElement>): void {
     const startingFret = this.startingFretRef.current?.value;
     const endingFret = this.endingFretRef.current?.value;
@@ -40,9 +41,9 @@ class App extends React.Component<{}, IAppState> {
         parseInt(endingFret),
         fretboardArray.length
       );
-      this.setState({ selectedFret});
-      if (e && e.currentTarget.getAttribute('data-id') === 'reset-button') {
-        this.setState({numFail: 0, numSuccess: 0 });
+      this.setState({ selectedFret });
+      if (e && e.currentTarget.getAttribute("data-id") === "reset-button") {
+        this.setState({ numFail: 0, numSuccess: 0 });
       }
     }
   }
@@ -61,10 +62,10 @@ class App extends React.Component<{}, IAppState> {
         const [fret, string] = this.state.selectedFret;
         const highlightedNote = fretboardArray[string][fret];
         if (note === highlightedNote) {
-          this.setState({numSuccess: this.state.numSuccess + 1});
+          this.setState({ numSuccess: this.state.numSuccess + 1 });
           this.generateNewFret();
         } else {
-          this.setState({numFail: this.state.numFail + 1});
+          this.setState({ numFail: this.state.numFail + 1 });
         }
       }
     };
@@ -147,7 +148,9 @@ class App extends React.Component<{}, IAppState> {
                 defaultValue={12}
               />
             </div>
-            <button data-id="reset-button" onClick={this.generateNewFret}>Start/Reset</button>
+            <button data-id="reset-button" onClick={this.generateNewFret}>
+              Start/Reset
+            </button>
           </div>
           <div className="midi-controls card-wrapper">
             <label htmlFor="inputs">Available MIDI Inputs</label>
@@ -160,8 +163,11 @@ class App extends React.Component<{}, IAppState> {
               Select MIDI Input
             </button>
           </div>
-          <ScoreKeeper numSuccess={this.state.numSuccess} numFail={this.state.numFail} />
         </div>
+        <ScoreKeeper
+          numSuccess={this.state.numSuccess}
+          numFail={this.state.numFail}
+        />
         <footer>
           <a href="https://github.com/friedpies/fretboard-trainer">repo</a>
         </footer>

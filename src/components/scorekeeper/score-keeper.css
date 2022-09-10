@@ -1,5 +1,5 @@
 .score-keeper-component h2 {
-    padding: 2px;
+  padding: 2px;
 }
 .score-keeper-component .number-wrapper {
   display: flex;
@@ -9,6 +9,7 @@
 
 .score-keeper-component {
   font-size: 20px;
+  width: var(--container-width);
 }
 
 .score-keeper-component .success {
@@ -32,7 +33,7 @@ h2.score-title {
 }
 
 .stat-container {
-  display: flex;
+  width: 100%;
 }
 
 .score-display {

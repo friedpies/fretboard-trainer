@@ -6,6 +6,6 @@
 .piano-container .piano {
     height: 120px;
     width: 100%;
-    min-width: 800px;
+    min-width: var(--container-width);
     max-width: 1000px;
 }

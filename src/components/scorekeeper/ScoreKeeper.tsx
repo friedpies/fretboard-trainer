@@ -10,7 +10,7 @@ export const ScoreKeeper: React.FC<IScoreKeeperProps> = ({
   numSuccess,
 }) => {
     const average = (numSuccess / (numSuccess + numFail));
-    const displayAverage = isNaN(average) ? 0 : average;
+    const displayAverage = isNaN(average) ? 0 : average * 100;
   return (
     <div className="score-keeper-component card-wrapper">
       <h2 className="score-title">Stats</h2>
@@ -26,7 +26,7 @@ export const ScoreKeeper: React.FC<IScoreKeeperProps> = ({
           </div>
           <div className="score-display average-container">
             <h2 className="score-display average">
-              {`${displayAverage}%`}
+              {`${displayAverage.toFixed(2)}%`}
             </h2>
             <h2 className="label-for-average">Average</h2>
           </div>
