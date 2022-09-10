@@ -2,7 +2,8 @@
 
 The purpose of this web app is to attempt to close the mental gap between a piano keyboard and a guitar fretboard. This app will randomly select a guitar note and the goal is to play the note back on the keyboard (in the correct octave). When the right note is played, another random fret will be generated.
 
-![image](https://user-images.githubusercontent.com/9576306/189498876-25cfb55c-afc9-4c34-9989-f468194679a2.png)
+https://user-images.githubusercontent.com/9576306/189499027-29875478-d765-4cb1-8f82-f23bec2302db.mov
+
 
 # Why I made this
 
@@ -23,3 +24,6 @@ If that doesn't work for some reason, built it yourself using the instructions b
 This app was built with Create React App and is pretty easy to get up and running. If you use `yarn`, then `yarn && yarn start` should be enough to get going. For npm, likely `npm install && npm start` should work (though I haven't tested).
 
 MIDI inputs will be listed in a select menu on start, changing the select value should reset the MIDI connection to your desired controller. Clicking "Start" will get you started!
+
+
+
