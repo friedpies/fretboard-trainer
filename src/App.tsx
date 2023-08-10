@@ -7,6 +7,8 @@ import { PianoModel } from "./components/piano/PianoModel";
 import { ScoreKeeper } from "./components/scorekeeper/ScoreKeeper";
 import { fretboardArray } from "./constants";
 import { midiHandler } from "./Midi";
+import { pitchDetector } from "./components/pitch-detector/PitchDetector";
+import { PitchCard } from "./components/pitch-detector/PitchCard";
 
 interface IAppState {
   selectedFret: undefined | [number, number];
@@ -20,6 +22,7 @@ class App extends React.Component<{}, IAppState> {
   protected endingFretRef = React.createRef<HTMLInputElement>();
   protected midiInputRef = React.createRef<HTMLSelectElement>();
   protected midiHandler = midiHandler;
+  protected pitchDetector = pitchDetector;
   protected pianoModel = new PianoModel();
 
   state: IAppState = {
@@ -49,9 +52,10 @@ class App extends React.Component<{}, IAppState> {
   }
 
   componentDidMount(): void {
-    this.midiHandler.initialize()?.then(() => {
-      this.registerListeners();
-    });
+    Promise.all([
+      this.midiHandler.initialize(),
+      this.pitchDetector.initialize(),
+    ]).then(() => this.registerListeners());
   }
 
   protected registerListeners(): void {
@@ -86,6 +90,9 @@ class App extends React.Component<{}, IAppState> {
 
     this.pianoModel.onKeyEmitter.on("noteon", onNoteOn);
     this.pianoModel.onKeyEmitter.on("noteoff", onNoteOff);
+
+    this.pitchDetector.onKeyEmitter.on("noteon", onNoteOn);
+    this.pitchDetector.onKeyEmitter.on("noteoff", onNoteOff);
   }
 
   protected pickRandomFret(
@@ -168,6 +175,7 @@ class App extends React.Component<{}, IAppState> {
             </button>
           </div>
         </div>
+        <PitchCard pitchDetector={this.pitchDetector}/>
         <footer>
           <a href="https://github.com/friedpies/fretboard-trainer">repo</a>
         </footer>

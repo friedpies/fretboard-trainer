@@ -14,6 +14,7 @@
     "html-piano": "^1.1.2",
     "midi-message-parser": "^2.0.1",
     "picnic": "^7.1.0",
+    "pitchy": "^4.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
