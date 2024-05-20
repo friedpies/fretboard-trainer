@@ -52,25 +52,25 @@ export class PianoModel implements IController {
     return `${noteName.toUpperCase()}${keyOctave}`;
   }
 
-//   handlePlayedNotesChanged(playedNotes: Set<string>): void {
-//     playedNotes.forEach((note) => {
-//       const noteSelector = this.noteToSelector(note);
-//       const key = this.node.querySelector(noteSelector);
-//       if (key) {
-//         this.pianoObj.forceKeyDown(key);
-//       }
-//     });
-//     this.previousNotes.forEach((note) => {
-//       if (!playedNotes.has(note)) {
-//         const noteSelector = this.noteToSelector(note);
-//         const key = this.node.querySelector(noteSelector);
-//         if (key) {
-//           this.pianoObj.forceKeyUp(key);
-//         }
-//       }
-//     });
-//     this.previousNotes = new Set([...playedNotes]);
-//   }
+  handlePlayedNotesChanged(playedNotes: Set<string>): void {
+    playedNotes.forEach((note) => {
+      const noteSelector = this.noteToSelector(note);
+      const key = this.node.querySelector(noteSelector);
+      if (key) {
+        this.pianoObj.forceKeyDown(key);
+      }
+    });
+    this.previousNotes.forEach((note) => {
+      if (!playedNotes.has(note)) {
+        const noteSelector = this.noteToSelector(note);
+        const key = this.node.querySelector(noteSelector);
+        if (key) {
+          this.pianoObj.forceKeyUp(key);
+        }
+      }
+    });
+    this.previousNotes = new Set([...playedNotes]);
+  }
 
   protected noteToSelector(note: string): string {
     const noteName = note.toLowerCase().substring(0, note.length - 1);

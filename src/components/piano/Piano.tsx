@@ -8,12 +8,12 @@ export interface IPianoProps extends InstrumentDisplay {
   pianoModel: PianoModel;
 }
 
-export const Piano: React.FC<IPianoProps> = ({ pianoModel }) => {
+export const Piano: React.FC<IPianoProps> = ({ pianoModel, playedNotes }) => {
   const pianoContainerRef = React.useRef<HTMLDivElement>(null);
 
-  //   React.useEffect(() => {
-  //     pianoModel.handlePlayedNotesChanged(playedNotes);
-  //   }, [playedNotes]);
+    React.useEffect(() => {
+      pianoModel.handlePlayedNotesChanged(playedNotes);
+    }, [pianoModel, playedNotes]);
 
   React.useEffect(() => {
     if (pianoContainerRef.current) {

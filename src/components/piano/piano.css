@@ -9,3 +9,7 @@
     min-width: var(--container-width);
     max-width: 1000px;
 }
+
+.white-keys .white-key.key-down, .black-keys .black-key.key-down {
+    background: blue;
+}
