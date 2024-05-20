@@ -16,6 +16,7 @@ interface IAppState {
   inputs: Input[];
   numSuccess: number;
   numFail: number;
+  noteMode: "Single" | "Multi";
 }
 class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
@@ -31,6 +32,7 @@ class App extends React.Component<{}, IAppState> {
     inputs: [],
     numSuccess: 0,
     numFail: 0,
+    noteMode: "Single",
   };
 
   protected generateNewFret = (e?: React.MouseEvent<HTMLButtonElement>): void =>
@@ -60,8 +62,13 @@ class App extends React.Component<{}, IAppState> {
 
   protected registerListeners(): void {
     const onNoteOn = (note: string) => {
-      const playedNotes = new Set([...this.state.playedNotes, note]);
+      const playedNotes = new Set(
+        this.state.noteMode === "Multi"
+          ? [...this.state.playedNotes, note]
+          : [note]
+      );
       this.setState({ playedNotes });
+
       if (this.state.selectedFret) {
         const [fret, string] = this.state.selectedFret;
         const highlightedNote = fretboardArray[string][fret];
@@ -74,9 +81,13 @@ class App extends React.Component<{}, IAppState> {
       }
     };
     const onNoteOff = (note: string) => {
-      const playedNotes = this.state.playedNotes;
-      playedNotes.delete(note);
-      this.setState({ playedNotes: new Set([...playedNotes]) });
+      if (this.state.noteMode === "Multi") {
+        const playedNotes = this.state.playedNotes;
+        playedNotes.delete(note);
+        this.setState({ playedNotes: new Set([...playedNotes]) });
+      } else {
+        this.setState({ playedNotes: new Set() });
+      }
     };
 
     this.midiHandler.onKeyEmitter.on("noteon", onNoteOn);
@@ -117,6 +128,15 @@ class App extends React.Component<{}, IAppState> {
       this.midiHandler.onInputSelect(selectedInputName);
     }
   }
+
+  protected handleNoteModeChanged = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
+    const value = e.currentTarget.value;
+    if (value === "Single" || value === "Multi") {
+      this.setState({ noteMode: value });
+    }
+  };
 
   render() {
     return (
@@ -173,9 +193,19 @@ class App extends React.Component<{}, IAppState> {
             <button onClick={this.handleMidiInputChanged}>
               Select MIDI Input
             </button>
+            <br />
+            <label htmlFor="node-mode">Note Mode</label>
+            <select
+              id="note-mode"
+              onChange={this.handleNoteModeChanged}
+              value={this.state.noteMode}
+            >
+              <option key="multi">Multi</option>
+              <option key="single">Single</option>
+            </select>
           </div>
         </div>
-        <PitchCard pitchDetector={this.pitchDetector}/>
+        <PitchCard pitchDetector={this.pitchDetector} />
         <footer>
           <a href="https://github.com/friedpies/fretboard-trainer">repo</a>
         </footer>

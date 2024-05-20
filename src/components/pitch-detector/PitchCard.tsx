@@ -7,7 +7,6 @@ interface PitchCardProps {
 
 export const PitchCard: React.FC<PitchCardProps> = ({ pitchDetector }) => {
   const handleClick = React.useCallback(() => {
-    console.log('we have a pitch detector', pitchDetector);
     pitchDetector.resumeAudioContext();
   }, [pitchDetector]);
 

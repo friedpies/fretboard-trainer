@@ -54,7 +54,6 @@ export class PitchDetector implements IController {
   }
 
   resumeAudioContext(): void {
-    console.log("do we have audio context", this.audioContext);
     this.audioContext?.resume();
   }
 
@@ -68,15 +67,12 @@ export class PitchDetector implements IController {
     const [pitch, clarity] = detector.findPitch(input, sampleRate);
     const roundedPitch = Math.round(pitch * 10) / 10;
     const clarityPercent = Math.round(clarity * 100);
-    console.log(clarityPercent);
     if (clarityPercent > 85) {
       const noteName = frequencyToNote(roundedPitch);
-      console.log("Note", noteName);
       this.fireNoteOn(noteName);
     } else {
       this.turnOffNotes();
     }
-    // console.log("Pitch", `${Math.round(pitch * 10) / 10} Hz`);
 
     window.setTimeout(
       () => this.updatePitch(analyserNode, detector, input, sampleRate),

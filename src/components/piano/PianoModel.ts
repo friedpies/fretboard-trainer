@@ -38,12 +38,10 @@ export class PianoModel implements IController {
   protected registerListeners(): void {
     this.pianoObj.keyDown = (key: Element) => {
       const noteName = this.parseNoteNameFromKey(key);
-      console.log('emitting note on', noteName);
       this.fireNoteOn(noteName);
     };
     this.pianoObj.keyUp = (key: Element) => {
       const noteName = this.parseNoteNameFromKey(key);
-      console.log('emitting note off', noteName);
       this.fireNoteOff(noteName);
     };
   }
