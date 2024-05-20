@@ -16,6 +16,8 @@
   position: relative;
   background-color: brown;
   color: brown;
+  user-select: none;
+  cursor: pointer;
 }
 
 .fretboard-grid .string-line {

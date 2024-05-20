@@ -138,12 +138,18 @@ class App extends React.Component<{}, IAppState> {
     }
   };
 
+  protected setPlayedNotes = (playedNotes: Set<string>) => {
+    console.log('notes', Array.from(playedNotes))
+    this.setState({playedNotes: playedNotes});
+  }
+
   render() {
     return (
       <div className="App">
         <div className="instrument-container">
           <Fretboard
             selectedFret={this.state.selectedFret}
+            setPlayedNotes={this.setPlayedNotes}
             markers={[3, 5, 7, 9, 12]}
             fretboard={fretboardArray}
             playedNotes={this.state.playedNotes}

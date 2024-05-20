@@ -112,19 +112,23 @@ export interface InstrumentDisplay {
 
 export interface IController {
   readonly onKeyEmitter: EventEmitter;
-
 }
 
 export const lookupTable = generateLookupTable(fretboardArray);
+
+export const fretToNote = (stringIndex: number, fretIndex: number): string | undefined => {
+  return lookupTable.get(`${stringIndex}::${fretIndex}`);
+};
 
 export const isPlayed = (
   stringIndex: number,
   fretIndex: number,
   playedNotes: Set<string>
 ): boolean => {
-  const noteAtCoordinates = lookupTable.get(`${stringIndex}::${fretIndex}`);
+  const noteAtCoordinates = fretToNote(stringIndex, fretIndex);
   if (!noteAtCoordinates) {
     return false;
   }
   return playedNotes.has(noteAtCoordinates);
 };
+
