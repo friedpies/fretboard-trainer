@@ -1,0 +1,6 @@
+.audio-input-select {
+    display: flex;
+    flex-direction: column;
+    width: var(--container-width);
+    padding: 12px;
+}

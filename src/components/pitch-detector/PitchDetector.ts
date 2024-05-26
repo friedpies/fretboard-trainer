@@ -34,6 +34,8 @@ export class PitchDetector implements IController {
   private _audioInputDevices: MediaDeviceInfo[] = [];
   public audioInputDevicesDidChangeEmitter = new EventEmitter();
 
+  private currentNote: string | null = null;
+
   set audioInputDevices(devices: MediaDeviceInfo[]) {
     this._audioInputDevices = devices;
     this.audioInputDevicesDidChangeEmitter.emit("change", devices);
@@ -55,12 +57,19 @@ export class PitchDetector implements IController {
   async initialize(): Promise<void> {
     await this.refreshMicInputs();
   }
-  
-  async startAudioContext(): Promise<void> {
+
+  async stopAudioContext(): Promise<void> {
+    if (!this.audioContext) {
+      return;
+    }
+    await this.audioContext.close();
+    this.audioContext = undefined;
+  }
+
+  async startAudioContext(deviceId: string): Promise<void> {
     this.audioContext = new window.AudioContext();
-    // Need a button click
     const userMedia = await navigator.mediaDevices.getUserMedia({
-      audio: true,
+      audio: { deviceId: { exact: deviceId } },
     });
     const analayzerNode = this.audioContext.createAnalyser();
     this.audioContext.createMediaStreamSource(userMedia).connect(analayzerNode);
@@ -85,10 +94,16 @@ export class PitchDetector implements IController {
     const [pitch, clarity] = detector.findPitch(input, sampleRate);
     const roundedPitch = Math.round(pitch * 10) / 10;
     const clarityPercent = Math.round(clarity * 100);
+    console.log(`Pitch: ${roundedPitch} Hz, Clarity: ${clarityPercent}%`);
     if (clarityPercent > 85) {
       const noteName = frequencyToNote(roundedPitch);
-      this.fireNoteOn(noteName);
-    } else {
+      console.log(noteName);
+      if (noteName !== this.currentNote) {
+        this.currentNote = noteName;
+        this.fireNoteOn(noteName);
+      }
+    } else if (this.currentNote !== null) {
+      this.currentNote = null;
       this.turnOffNotes();
     }
 
