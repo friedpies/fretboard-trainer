@@ -31,16 +31,38 @@ export class PitchDetector implements IController {
   protected noteOffListener: Listener | undefined;
   protected audioContext: AudioContext | undefined;
 
+  private _audioInputDevices: MediaDeviceInfo[] = [];
+  public audioInputDevicesDidChangeEmitter = new EventEmitter();
+
+  set audioInputDevices(devices: MediaDeviceInfo[]) {
+    this._audioInputDevices = devices;
+    this.audioInputDevicesDidChangeEmitter.emit("change", devices);
+  }
+
+  get audioInputDevices(): MediaDeviceInfo[] {
+    return this._audioInputDevices;
+  }
+
+  public async refreshMicInputs(): Promise<void> {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    this.audioInputDevices = devices.filter(
+      (device) => device.kind === "audioinput"
+    );
+  }
+
   protected onNotes = new Set<string>();
 
   async initialize(): Promise<void> {
+    await this.refreshMicInputs();
+  }
+  
+  async startAudioContext(): Promise<void> {
     this.audioContext = new window.AudioContext();
-    const analayzerNode = this.audioContext.createAnalyser();
-
     // Need a button click
     const userMedia = await navigator.mediaDevices.getUserMedia({
       audio: true,
     });
+    const analayzerNode = this.audioContext.createAnalyser();
     this.audioContext.createMediaStreamSource(userMedia).connect(analayzerNode);
     const detector = Pitchy.forFloat32Array(analayzerNode.fftSize);
     const input = new Float32Array(detector.inputLength);
@@ -50,11 +72,7 @@ export class PitchDetector implements IController {
       input,
       this.audioContext.sampleRate
     );
-    return Promise.resolve(undefined);
-  }
-
-  resumeAudioContext(): void {
-    this.audioContext?.resume();
+    this.audioContext.resume();
   }
 
   protected updatePitch(
@@ -86,9 +104,9 @@ export class PitchDetector implements IController {
   };
 
   protected turnOffNotes = () => {
-    Array.from(this.onNotes).forEach(note => {
+    Array.from(this.onNotes).forEach((note) => {
       this.fireNoteOff(note);
-    })
+    });
   };
 
   protected fireNoteOff = (note: string): void => {
