@@ -26,6 +26,9 @@ class App extends React.Component<{}, IAppState> {
   protected pitchDetector = pitchDetector;
   protected pianoModel = new PianoModel();
 
+  private lastNoteOn: string | undefined;
+  private lastNoteOff: string | undefined;
+
   state: IAppState = {
     selectedFret: undefined,
     playedNotes: new Set(),
@@ -62,6 +65,10 @@ class App extends React.Component<{}, IAppState> {
 
   protected registerListeners(): void {
     const onNoteOn = (note: string) => {
+      if (note === this.lastNoteOn) {
+        return;
+      }
+      this.lastNoteOn = note;
       const playedNotes = new Set(
         this.state.noteMode === "Multi"
           ? [...this.state.playedNotes, note]
@@ -81,6 +88,11 @@ class App extends React.Component<{}, IAppState> {
       }
     };
     const onNoteOff = (note: string) => {
+      this.lastNoteOn = undefined;
+      if (note === this.lastNoteOff) {
+        return;
+      }
+      this.lastNoteOff = note;
       if (this.state.noteMode === "Multi") {
         const playedNotes = this.state.playedNotes;
         playedNotes.delete(note);
@@ -139,9 +151,9 @@ class App extends React.Component<{}, IAppState> {
   };
 
   protected setPlayedNotes = (playedNotes: Set<string>) => {
-    console.log('notes', Array.from(playedNotes))
-    this.setState({playedNotes: playedNotes});
-  }
+    console.log("notes", Array.from(playedNotes));
+    this.setState({ playedNotes: playedNotes });
+  };
 
   render() {
     return (
