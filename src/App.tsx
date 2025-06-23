@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "webmidi";
-import "./app.css";
+import "./App.css";
 import { Fretboard } from "./components/fretboard/Fretboard";
 import { Piano } from "./components/piano/Piano";
 import { PianoModel } from "./components/piano/PianoModel";
@@ -17,6 +17,8 @@ interface IAppState {
   numSuccess: number;
   numFail: number;
   noteMode: "Single" | "Multi";
+  microphones?: MediaDeviceInfo[];
+  selectedMicId?: string;
 }
 class App extends React.Component<{}, IAppState> {
   protected startingFretRef = React.createRef<HTMLInputElement>();
@@ -36,6 +38,8 @@ class App extends React.Component<{}, IAppState> {
     numSuccess: 0,
     numFail: 0,
     noteMode: "Single",
+    microphones: [],
+    selectedMicId: undefined,
   };
 
   protected generateNewFret = (e?: React.MouseEvent<HTMLButtonElement>): void =>
@@ -60,8 +64,23 @@ class App extends React.Component<{}, IAppState> {
     Promise.all([
       this.midiHandler.initialize(),
       this.pitchDetector.initialize(),
+      this.enumerateMicrophones()
     ]).then(() => this.registerListeners());
   }
+
+  enumerateMicrophones = async () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+      try {
+        // Request permission first so device labels are available
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        // Permission denied or error, fallback to enumerate anyway
+      }
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const microphones = devices.filter(device => device.kind === "audioinput");
+      this.setState({ microphones });
+    }
+  };
 
   protected registerListeners(): void {
     const onNoteOn = (note: string) => {
@@ -155,7 +174,24 @@ class App extends React.Component<{}, IAppState> {
     this.setState({ playedNotes: playedNotes });
   };
 
+  handleMicChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedMicId = e.target.value;
+    this.setState({ selectedMicId });
+    if (selectedMicId) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: { deviceId: selectedMicId }
+        });
+        // You may want to use the stream here if needed
+        // For now, just obtaining the stream is enough to activate the mic
+      } catch (err) {
+        console.error("Error accessing microphone:", err);
+      }
+    }
+  };
+
   render() {
+    const micListEmpty = !this.state.microphones || this.state.microphones.length === 0;
     return (
       <div className="App">
         <div className="instrument-container">
@@ -221,6 +257,28 @@ class App extends React.Component<{}, IAppState> {
               <option key="multi">Multi</option>
               <option key="single">Single</option>
             </select>
+          </div>
+          <div className="mic-controls card-wrapper">
+            <label htmlFor="microphones">Available Microphones</label>
+            {micListEmpty ? (
+              <button onClick={this.enumerateMicrophones}>
+                Enable Microphones
+              </button>
+            ) : (
+              <select
+                id="microphones"
+                value={this.state.selectedMicId || ""}
+                onChange={this.handleMicChange}
+              >
+                <option value="">Select a microphone</option>
+                {this.state.microphones &&
+                  this.state.microphones.map((mic) => (
+                    <option key={mic.deviceId} value={mic.deviceId}>
+                      {mic.label || `Microphone ${mic.deviceId}`}
+                    </option>
+                  ))}
+              </select>
+            )}
           </div>
         </div>
         <PitchCard pitchDetector={this.pitchDetector} />
